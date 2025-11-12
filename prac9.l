@@ -1,9 +1,10 @@
 %{
-#include "prac9.tab.h"
-#include <string.h>
+#include <stdio.h>
+#include "y.tab.h"
 %}
 
 %%
+
 "for"           { return FOR; }
 "("             { return LPAREN; }
 ")"             { return RPAREN; }
@@ -12,26 +13,33 @@
 ";"             { return SEMICOLON; }
 ","             { return COMMA; }
 "="             { return ASSIGN; }
+
 "<="            { return LE; }
 ">="            { return GE; }
 "=="            { return EQ; }
 "!="            { return NE; }
 "<"             { return LT; }
 ">"             { return GT; }
+
 "++"            { return INC; }
 "--"            { return DEC; }
+
 "+"             { return PLUS; }
 "-"             { return MINUS; }
 "*"             { return MUL; }
 "/"             { return DIV; }
 
-[0-9]+          { yylval.str = strdup(yytext); return NUMBER; }
-[a-zA-Z_][a-zA-Z0-9_]*  { yylval.str = strdup(yytext); return IDENTIFIER; }
-\"[^\"]*\"      { yylval.str = strdup(yytext); return STRING; }
+\"[^\"]*\"      { yylval.str = strdup(yytext); return STRING; }   /* <-- fixed */
 
-[ \t\n\r]+      { /* ignore whitespace */ }
-.               { printf("❌ Invalid character: %s\n", yytext); }
+[a-zA-Z_][a-zA-Z0-9_]*   { return IDENTIFIER; }
+[0-9]+                   { return NUMBER; }
+
+[ \t\r\n]+               ;   /* Ignore whitespace */
+
+. { 
+    printf("Invalid Character: %s\n", yytext);
+}
 
 %%
-int yywrap() { return 1; }
 
+int yywrap() { return 0; }
