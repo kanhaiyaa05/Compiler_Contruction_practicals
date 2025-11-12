@@ -13,7 +13,10 @@ int yyerror(char *s);
 
 %token FOR LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA ASSIGN
 %token LE GE EQ NE LT GT INC DEC PLUS MINUS MUL DIV
-%token <str> IDENTIFIER NUMBER STRING
+%token IDENTIFIER NUMBER
+%token <str> STRING
+
+%expect 1
 
 %%
 program:
@@ -49,13 +52,9 @@ INCR_EXPR:
     ;
 
 STATEMENTS:
-      /* empty */
-    | STATEMENT_LIST
-    ;
-
-STATEMENT_LIST:
-      STATEMENT
-    | STATEMENT_LIST STATEMENT
+    /* empty body allowed */
+    | STATEMENT
+    | STATEMENTS STATEMENT
     ;
 
 STATEMENT:
@@ -101,4 +100,3 @@ int yyerror(char *s) {
     printf("❌ Error: %s\n", s);
     return 0;
 }
-
