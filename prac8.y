@@ -3,25 +3,28 @@
 #include <stdlib.h>
 #include <math.h>
 
-void yyerror(char *s);
+void yyerror(const char *s);
 int yylex(void);
 %}
 
-/* semantic value type */
+/* Define the semantic value type */
 %union {
     double dval;
 }
 
+/* Declare tokens and their types */
 %token <dval> NUMBER
 %type  <dval> expr
 
-%left '+' '-'          /* lowest precedence */
-%left '*' '/'          /* higher precedence */
-%right '^'             /* right-associative power */
-%right UMINUS          /* unary minus */
+/* Operator precedence and associativity */
+%left '+' '-'
+%left '*' '/'
+%right '^'
+%right UMINUS
 
 %%
 program:
+        /* allow multiple expressions */
         program expr '\n'    { printf("Result: %f\n", $2); }
         | /* empty */
         ;
@@ -51,7 +54,6 @@ int main(void){
     return 0;
 }
 
-void yyerror(char *s){
+void yyerror(const char *s){
     fprintf(stderr, "Error: %s\n", s);
 }
-
